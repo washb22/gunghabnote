@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Heart, Sparkles, ArrowRight, Star, AlertCircle, ChevronDown } from 'lucide-react';
+import { Heart, Sparkles, ArrowRight, Star, AlertCircle, ChevronDown, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // 커스텀 시간 선택기 컴포넌트
 const CustomTimePicker = ({ value, onChange, name, optional = false }) => {
@@ -61,9 +62,9 @@ const CustomTimePicker = ({ value, onChange, name, optional = false }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white backdrop-blur-sm flex items-center justify-between hover:bg-white/25 transition-colors"
+        className="w-full px-4 py-3 bg-white/50 border border-rose-200 rounded-xl text-gray-800 backdrop-blur-sm flex items-center justify-between hover:bg-white/80 transition-colors"
       >
-        <span className={selectedHour && selectedMinute ? 'text-white' : 'text-white/50'}>
+        <span className={selectedHour && selectedMinute ? 'text-gray-800' : 'text-gray-400'}>
           {displayTime}
         </span>
         <ChevronDown className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -105,7 +106,7 @@ const CustomTimePicker = ({ value, onChange, name, optional = false }) => {
                         selectedPeriod === period
                           ? period === 'AM' 
                             ? 'bg-orange-500 text-white border-2 border-orange-400 shadow-lg'
-                            : 'bg-indigo-500 text-white border-2 border-indigo-400 shadow-lg'
+                            : 'bg-rose-500 text-white border-2 border-rose-400 shadow-lg'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
                       }`}
                     >
@@ -169,7 +170,7 @@ const CustomTimePicker = ({ value, onChange, name, optional = false }) => {
                       }}
                       className={`w-full px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                         selectedMinute === minute
-                          ? 'bg-purple-500 text-white border border-purple-400 shadow-md'
+                          ? 'bg-amber-500 text-white border border-amber-400 shadow-md'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >
@@ -217,7 +218,7 @@ const CustomTimePicker = ({ value, onChange, name, optional = false }) => {
                 <button
                   type="button"
                   onClick={() => handleTimeSelect(selectedHour, selectedMinute, selectedPeriod)}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-xl hover:from-pink-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold rounded-xl hover:from-pink-600 hover:to-rose-700 transition-all transform hover:scale-105 shadow-lg"
                 >
                   ✓ 선택
                 </button>
@@ -246,42 +247,44 @@ const AnalyzePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [error, setError] = useState('');
+  
+  const navigate = useNavigate();
 
   // 퍼센티지별 색상 스타일 함수
   const getPercentageStyles = (percentage) => {
     if (percentage >= 90) {
       return {
-        textColor: 'text-emerald-400',
+        textColor: 'text-emerald-500',
         gradient: 'bg-gradient-to-r from-emerald-400 to-green-500'
       };
     }
     if (percentage >= 80) {
       return {
-        textColor: 'text-green-400',
+        textColor: 'text-green-500',
         gradient: 'bg-gradient-to-r from-green-400 to-emerald-500'
       };
     }
     if (percentage >= 70) {
       return {
-        textColor: 'text-yellow-400',
-        gradient: 'bg-gradient-to-r from-yellow-400 to-amber-500'
+        textColor: 'text-amber-500',
+        gradient: 'bg-gradient-to-r from-amber-400 to-yellow-500'
       };
     }
     if (percentage >= 60) {
       return {
-        textColor: 'text-orange-400',
-        gradient: 'bg-gradient-to-r from-orange-400 to-yellow-500'
+        textColor: 'text-orange-500',
+        gradient: 'bg-gradient-to-r from-orange-400 to-pink-500'
       };
     }
     if (percentage >= 50) {
       return {
-        textColor: 'text-red-400',
-        gradient: 'bg-gradient-to-r from-red-400 to-pink-500'
+        textColor: 'text-pink-500',
+        gradient: 'bg-gradient-to-r from-pink-400 to-rose-500'
       };
     }
     return {
-      textColor: 'text-purple-400',
-      gradient: 'bg-gradient-to-r from-purple-400 to-pink-500'
+      textColor: 'text-rose-500',
+      gradient: 'bg-gradient-to-r from-rose-400 to-pink-500'
     };
   };
 
@@ -293,7 +296,6 @@ const AnalyzePage = () => {
     // 에러 상태 초기화
     if (error) setError('');
   };
-
 
 const handleSubmit = async () => {
   if (!isFormValid) return;
@@ -392,6 +394,7 @@ const handleSubmit = async () => {
     setIsLoading(false);
   }
 };
+
   const isFormValid = formData.myName && formData.myBirthDate && formData.myGender && 
                      formData.partnerName && formData.partnerBirthDate && formData.partnerGender;
 
@@ -405,82 +408,102 @@ const handleSubmit = async () => {
     setError('');
   };
 
+  const navigateToHome = () => {
+    navigate('/');
+  };
+
   if (showResult) {
     const percentageStyles = getPercentageStyles(result.percentage);
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
-            <div className="mb-8">
-              <div className="flex justify-center items-center space-x-2 mb-4">
-                <Heart className="w-12 h-12 text-pink-400 animate-pulse" />
-                <span className="text-4xl">💕</span>
-                <Heart className="w-12 h-12 text-purple-400 animate-pulse" />
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-2">
-                {formData.myName} ✕ {formData.partnerName}
-              </h2>
-              <p className="text-white/70 text-lg">두 사람의 사주 궁합</p>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50">
+        {/* Header */}
+        <header className="relative z-50 bg-white/50 backdrop-blur-sm border-b border-pink-100">
+          <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
+            <button 
+              onClick={navigateToHome}
+              className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              홈으로
+            </button>
+            <div className="flex-1 text-center">
+              <h1 className="text-lg font-bold text-gray-800">궁합 분석 결과</h1>
             </div>
-            
-            {/* 퍼센트 원형 표시 */}
-            <div className="mb-8">
-              <div className="relative w-32 h-32 mx-auto mb-4">
-                <div className={`absolute inset-0 rounded-full ${percentageStyles.gradient} p-1`}>
-                  <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-900 to-indigo-900 flex items-center justify-center">
-                    <span className={`text-3xl font-bold ${percentageStyles.textColor}`}>
-                      {result.percentage}%
-                    </span>
-                  </div>
+          </div>
+        </header>
+
+        <div className="max-w-2xl mx-auto p-4">
+          <div className="text-center mb-8 pt-8">
+            <div className="flex justify-center items-center space-x-2 mb-4">
+              <Heart className="w-12 h-12 text-pink-400 animate-pulse" />
+              <span className="text-4xl">💕</span>
+              <Heart className="w-12 h-12 text-rose-400 animate-pulse" />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              {formData.myName} ✕ {formData.partnerName}
+            </h2>
+            <p className="text-gray-600 text-lg">두 사람의 사주 궁합</p>
+          </div>
+          
+          {/* 퍼센트 원형 표시 */}
+          <div className="mb-8">
+            <div className="relative w-32 h-32 mx-auto mb-4">
+              <div className={`absolute inset-0 rounded-full ${percentageStyles.gradient} p-1`}>
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-50 to-pink-50 flex items-center justify-center">
+                  <span className={`text-3xl font-bold ${percentageStyles.textColor}`}>
+                    {result.percentage}%
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div className="bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-2xl p-6 mb-8 border border-pink-300/30">
-              <p className="text-xl text-white leading-relaxed font-medium">
-                {result.message}
-              </p>
-            </div>
+          <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-pink-100 shadow-lg">
+            <p className="text-xl text-gray-700 leading-relaxed font-medium text-center">
+              {result.message}
+            </p>
+          </div>
 
-            <div className="space-y-4">
-              {result.ctaMessage && (
-                <>
-                  <p className="text-white/80 text-lg">
+          <div className="space-y-4">
+            {result.ctaMessage && (
+              <>
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
+                  <p className="text-gray-700 text-lg text-center">
                     {result.ctaMessage}
                   </p>
-                  
-                  <button 
-                    onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdPSrx-M-MdwdBlQ3Q1fILrNjerlFTgt7E0CAFwppnaBzc6rw/viewform?usp=header', '_blank')}
-                    className="group w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
-                  >
-                    <div className="flex items-center justify-center space-x-3">
-                      <span className="text-2xl">💌</span>
-                      <div className="text-left">
-                        <div className="text-lg">이 사람과 정말 잘 될 수 있을까요?</div>
-                        <div className="text-sm opacity-90">연애사주 리포트에서 자세히 알려드릴게요</div>
-                      </div>
-                      <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </button>
-                </>
-              )}
-
-              {!result.ctaMessage && result.percentage >= 80 && (
-                <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-2xl p-6 border border-yellow-300/30">
-                  <p className="text-white/90 text-lg font-medium">
-                    🎉 정말 좋은 궁합이네요! 서로를 소중히 여기며 좋은 관계를 이어가세요 ✨
-                  </p>
                 </div>
-              )}
+                
+                <button 
+                  onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdPSrx-M-MdwdBlQ3Q1fILrNjerlFTgt7E0CAFwppnaBzc6rw/viewform?usp=header', '_blank')}
+                  className="group w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="text-2xl">💌</span>
+                    <div className="text-left">
+                      <div className="text-lg">이 사람과 정말 잘 될 수 있을까요?</div>
+                      <div className="text-sm opacity-90">연애사주 리포트에서 자세히 알려드릴게요</div>
+                    </div>
+                    <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+              </>
+            )}
 
-              <button 
-                onClick={resetForm}
-                className="mt-6 text-white/60 hover:text-white transition-colors text-sm underline"
-              >
-                다른 사람과 궁합 보기
-              </button>
-            </div>
+            {!result.ctaMessage && result.percentage >= 80 && (
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                <p className="text-gray-700 text-lg font-medium text-center">
+                  🎉 정말 좋은 궁합이네요! 서로를 소중히 여기며 좋은 관계를 이어가세요 ✨
+                </p>
+              </div>
+            )}
+
+            <button 
+              onClick={resetForm}
+              className="mt-6 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl transition-colors border border-gray-200"
+            >
+              다른 사람과 궁합 보기
+            </button>
           </div>
         </div>
       </div>
@@ -488,42 +511,58 @@ const handleSubmit = async () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
-      <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50">
+      {/* Header */}
+      <header className="relative z-50 bg-white/50 backdrop-blur-sm border-b border-pink-100">
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
+          <button 
+            onClick={navigateToHome}
+            className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            홈으로
+          </button>
+          <div className="flex-1 text-center">
+            <h1 className="text-lg font-bold text-gray-800">궁합 분석</h1>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-md mx-auto p-4">
+        <div className="text-center mb-8 pt-8">
           <div className="flex justify-center mb-4">
             <div className="relative">
               <Heart className="w-12 h-12 text-pink-400 animate-pulse" />
-              <Star className="w-6 h-6 text-yellow-400 absolute -top-1 -right-1 animate-spin" />
+              <Star className="w-6 h-6 text-amber-400 absolute -top-1 -right-1 animate-spin" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
             짝남/짝녀와의 궁합
           </h1>
-          <p className="text-white/70 text-lg">
+          <p className="text-gray-600 text-lg">
             두 사람의 사주로 알아보는 특별한 인연
           </p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+        <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-pink-100 shadow-lg">
           {error && (
-            <div className="mb-6 p-4 bg-red-500/20 border border-red-400/50 rounded-xl flex items-center space-x-3">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center space-x-3">
               <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-red-200 text-sm">{error}</p>
+              <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
 
           <div className="space-y-8">
             {/* 내 정보 섹션 */}
             <div>
-              <h3 className="text-white font-bold text-lg mb-4 flex items-center">
+              <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center">
                 <span className="w-2 h-2 bg-pink-400 rounded-full mr-2"></span>
                 내 정보
               </h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     이름
                   </label>
                   <input
@@ -531,13 +570,13 @@ const handleSubmit = async () => {
                     name="myName"
                     value={formData.myName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent backdrop-blur-sm"
+                    className="w-full px-4 py-3 bg-white/50 border border-rose-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent backdrop-blur-sm"
                     placeholder="내 이름을 입력해주세요"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     생년월일
                   </label>
                   <input
@@ -545,12 +584,12 @@ const handleSubmit = async () => {
                     name="myBirthDate"
                     value={formData.myBirthDate}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent backdrop-blur-sm"
+                    className="w-full px-4 py-3 bg-white/50 border border-rose-200 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent backdrop-blur-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     성별
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -559,8 +598,8 @@ const handleSubmit = async () => {
                       onClick={() => setFormData({...formData, myGender: '남자'})}
                       className={`py-3 px-4 rounded-xl border transition-all ${
                         formData.myGender === '남자' 
-                          ? 'bg-blue-500/50 border-blue-400 text-white' 
-                          : 'bg-white/10 border-white/30 text-white/70 hover:bg-white/20'
+                          ? 'bg-blue-100 border-blue-300 text-blue-700' 
+                          : 'bg-white/50 border-gray-200 text-gray-600 hover:bg-white/80'
                       }`}
                     >
                       남자
@@ -570,8 +609,8 @@ const handleSubmit = async () => {
                       onClick={() => setFormData({...formData, myGender: '여자'})}
                       className={`py-3 px-4 rounded-xl border transition-all ${
                         formData.myGender === '여자' 
-                          ? 'bg-pink-500/50 border-pink-400 text-white' 
-                          : 'bg-white/10 border-white/30 text-white/70 hover:bg-white/20'
+                          ? 'bg-pink-100 border-pink-300 text-pink-700' 
+                          : 'bg-white/50 border-gray-200 text-gray-600 hover:bg-white/80'
                       }`}
                     >
                       여자
@@ -580,7 +619,7 @@ const handleSubmit = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     태어난 시간
                   </label>
                   <CustomTimePicker
@@ -594,14 +633,14 @@ const handleSubmit = async () => {
 
             {/* 상대 정보 섹션 */}
             <div>
-              <h3 className="text-white font-bold text-lg mb-4 flex items-center">
-                <span className="w-2 h-2 bg-purple-400 rounded-full mr-2"></span>
+              <h3 className="text-gray-800 font-bold text-lg mb-4 flex items-center">
+                <span className="w-2 h-2 bg-rose-400 rounded-full mr-2"></span>
                 상대방 정보
               </h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     상대 이름
                   </label>
                   <input
@@ -609,13 +648,13 @@ const handleSubmit = async () => {
                     name="partnerName"
                     value={formData.partnerName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm"
+                    className="w-full px-4 py-3 bg-white/50 border border-rose-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent backdrop-blur-sm"
                     placeholder="상대방 이름을 입력해주세요"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     상대 생년월일
                   </label>
                   <input
@@ -623,12 +662,12 @@ const handleSubmit = async () => {
                     name="partnerBirthDate"
                     value={formData.partnerBirthDate}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm"
+                    className="w-full px-4 py-3 bg-white/50 border border-rose-200 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent backdrop-blur-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     상대 성별
                   </label>
                   <div className="grid grid-cols-2 gap-3">
@@ -637,8 +676,8 @@ const handleSubmit = async () => {
                       onClick={() => setFormData({...formData, partnerGender: '남자'})}
                       className={`py-3 px-4 rounded-xl border transition-all ${
                         formData.partnerGender === '남자' 
-                          ? 'bg-blue-500/50 border-blue-400 text-white' 
-                          : 'bg-white/10 border-white/30 text-white/70 hover:bg-white/20'
+                          ? 'bg-blue-100 border-blue-300 text-blue-700' 
+                          : 'bg-white/50 border-gray-200 text-gray-600 hover:bg-white/80'
                       }`}
                     >
                       남자
@@ -648,8 +687,8 @@ const handleSubmit = async () => {
                       onClick={() => setFormData({...formData, partnerGender: '여자'})}
                       className={`py-3 px-4 rounded-xl border transition-all ${
                         formData.partnerGender === '여자' 
-                          ? 'bg-pink-500/50 border-pink-400 text-white' 
-                          : 'bg-white/10 border-white/30 text-white/70 hover:bg-white/20'
+                          ? 'bg-pink-100 border-pink-300 text-pink-700' 
+                          : 'bg-white/50 border-gray-200 text-gray-600 hover:bg-white/80'
                       }`}
                     >
                       여자
@@ -658,7 +697,7 @@ const handleSubmit = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-white/90 text-sm font-medium mb-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
                     상대 태어난 시간
                   </label>
                   <CustomTimePicker
@@ -667,7 +706,7 @@ const handleSubmit = async () => {
                     name="partnerBirthTime"
                     optional={true}
                   />
-                  <p className="text-white/50 text-xs mt-1">
+                  <p className="text-gray-500 text-xs mt-1">
                     상대의 태어난 시간을 모르시면 입력하지 않으셔도 좋습니다.
                   </p>
                 </div>
@@ -679,8 +718,8 @@ const handleSubmit = async () => {
               disabled={!isFormValid || isLoading}
               className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform ${
                 isFormValid && !isLoading
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white hover:scale-105 shadow-lg'
-                  : 'bg-gray-500/50 text-gray-300 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white hover:scale-105 shadow-lg'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
               {isLoading ? (
@@ -698,7 +737,7 @@ const handleSubmit = async () => {
           </div>
 
           <div className="mt-6 text-center">
-            <p className="text-white/50 text-xs">
+            <p className="text-gray-500 text-xs">
               무료 체험 • 1분만에 결과 확인
             </p>
           </div>
