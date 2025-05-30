@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 
 // 구글 로그인 설정
-const GOOGLE_CLIENT_ID = "650126003972-avtocjtvoulidndb804qkj99shrmhplp.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "650126003972-avtocjtvoulidndb804qkj99shrrhplp.apps.googleusercontent.com";
 
 // 카카오 로그인 설정
 const KAKAO_JAVASCRIPT_KEY = "2e68d33888951bdd02e23318f6a07fa9";
