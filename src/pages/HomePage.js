@@ -3,7 +3,7 @@ import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, E
 import { useAuth } from '../components/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
-// 로그인/회원가입 모달 컴포넌트
+// 로그인/회원가입 모달 컴포넌트 (기존과 동일)
 const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
   const { login, signup, findUser, checkEmailExists, googleLogin, kakaoLogin, naverLogin } = useAuth();
   const [formData, setFormData] = useState({
@@ -338,6 +338,10 @@ const HomePage = () => {
     navigate('/analyze');
   };
 
+  const navigateToCommunity = () => {
+    navigate('/community');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50">
       {/* Header */}
@@ -358,6 +362,7 @@ const HomePage = () => {
               <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">기능소개</a>
               <a href="#reviews" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">궁합보기</button>
+              <button onClick={navigateToCommunity} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">감정기록</button>
               
               {user ? (
                 <div className="flex items-center space-x-4">
@@ -396,6 +401,7 @@ const HomePage = () => {
               <a href="#features" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">기능소개</a>
               <a href="#reviews" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">궁합보기</button>
+              <button onClick={navigateToCommunity} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">감정기록</button>
               
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
@@ -513,7 +519,7 @@ const HomePage = () => {
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">오늘의 속마음</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
                   하루 한 번, 그 사람의 진짜 마음을 엿볼 수 있어요. 
-                  사주가 분석해주는 오늘의 감정 상태를 확인해보세요.
+                  AI가 분석해주는 오늘의 감정 상태를 확인해보세요.
                 </p>
                 <div className="flex items-center text-rose-500 font-medium">
                   <span>매일 무료</span>
@@ -545,7 +551,10 @@ const HomePage = () => {
             {/* 하단 1개 */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-start-2">
-                <div className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-orange-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                <div 
+                  onClick={navigateToCommunity}
+                  className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-orange-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
+                >
                   <div className="bg-gradient-to-r from-orange-400 to-rose-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                     <MessageCircle className="w-8 h-8 text-white" />
                   </div>
@@ -673,7 +682,7 @@ const HomePage = () => {
               <ul className="space-y-2 text-gray-600">
                 <li><button onClick={navigateToAnalyze} className="hover:text-gray-800 transition-colors">궁합 분석</button></li>
                 <li><button onClick={navigateToMindReader} className="hover:text-gray-800 transition-colors">속마음 예측</button></li>
-                <li><a href="#" className="hover:text-gray-800 transition-colors">감정 기록</a></li>
+                <li><button onClick={navigateToCommunity} className="hover:text-gray-800 transition-colors">감정 기록</button></li>
                 <li><a href="#" className="hover:text-gray-800 transition-colors">연애 리포트</a></li>
               </ul>
             </div>
