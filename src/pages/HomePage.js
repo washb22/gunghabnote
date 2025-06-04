@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../components/AuthProvider';
+import { useAuth } from '../components/AuthProvider'; // useAuth는 named export이므로 중괄호 사용
 import { useNavigate } from 'react-router-dom';
 
-// 로그인/회원가입 모달 컴포넌트
+// 로그인/회원가입 모달 컴포넌트 (이 부분은 변경하지 않습니다. 기존 코드와 동일합니다.)
 const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
   const { login, signup, googleLogin, kakaoLogin } = useAuth();
   const [formData, setFormData] = useState({
@@ -69,7 +69,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
     try {
       if (mode === 'login') {
         const result = await login(formData.email, formData.password);
-        
+
         if (result.success) {
           setFormData({
             email: '',
@@ -89,7 +89,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
           name: formData.name,
           birthDate: formData.birthDate
         });
-        
+
         if (result.success) {
           setFormData({
             email: '',
@@ -354,11 +354,11 @@ const HomePage = () => {
               <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">기능소개</a>
               <a href="#reviews" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">궁합보기</button>
-              
+
               {user ? (
                 <div className="flex items-center space-x-4">
                   <span className="text-gray-700 font-medium">안녕하세요, {user.name}님!</span>
-                  <button 
+                  <button
                     onClick={logout}
                     className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition-all font-medium"
                   >
@@ -366,7 +366,7 @@ const HomePage = () => {
                   </button>
                 </div>
               ) : (
-                <button 
+                <button
                   onClick={() => openAuthModal('login')}
                   className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full transition-all font-medium shadow-lg"
                 >
@@ -376,7 +376,7 @@ const HomePage = () => {
             </div>
 
             {/* Mobile menu button */}
-            <button 
+            <button
               className="md:hidden text-gray-800"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -392,11 +392,11 @@ const HomePage = () => {
               <a href="#features" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">기능소개</a>
               <a href="#reviews" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">궁합보기</button>
-              
+
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
                   <p className="text-gray-700 font-medium mb-3">안녕하세요, {user.name}님!</p>
-                  <button 
+                  <button
                     onClick={logout}
                     className="w-full bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-full transition-all font-medium"
                   >
@@ -404,7 +404,7 @@ const HomePage = () => {
                   </button>
                 </div>
               ) : (
-                <button 
+                <button
                   onClick={() => openAuthModal('login')}
                   className="w-full bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-full transition-all font-medium shadow-lg"
                 >
@@ -441,7 +441,7 @@ const HomePage = () => {
                 특별한 공간
               </span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               연애 감정을 기록하고, 공유하며, 소중히 보관하는 곳
               <br />
@@ -450,7 +450,7 @@ const HomePage = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col items-center mb-12">
-              <button 
+              <button
                 onClick={navigateToAnalyze}
                 className="group bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center space-x-2 mb-4"
               >
@@ -458,7 +458,7 @@ const HomePage = () => {
                 <span>무료 궁합 보러가기</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              
+
               <p className="text-gray-500 text-sm">
                 {user ? '로그인된 상태에서 더 많은 기능을 이용하실 수 있어요' : '더 많은 기능은 로그인 후 이용하실 수 있어요'}
               </p>
@@ -499,7 +499,7 @@ const HomePage = () => {
             {/* 상단 2개 가로 배치 */}
             <div className="grid md:grid-cols-2 gap-8">
               {/* 속마음 예측 */}
-              <div 
+              <div
                 onClick={navigateToMindReader}
                 className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-rose-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
               >
@@ -508,7 +508,7 @@ const HomePage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">오늘의 속마음</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  하루 한 번, 그 사람의 진짜 마음을 엿볼 수 있어요. 
+                  하루 한 번, 그 사람의 진짜 마음을 엿볼 수 있어요.
                   사주가 분석해주는 오늘의 감정 상태를 확인해보세요.
                 </p>
                 <div className="flex items-center text-rose-500 font-medium">
@@ -519,8 +519,8 @@ const HomePage = () => {
               </div>
 
               {/* 궁합 분석 */}
-              <div 
-                onClick={navigateToAnalyze}
+              <div
+                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdPSrx-M-MdwdBlQ3Q1fILrNjerlFTgt7E0CAFwppnaBzc6rw/viewform?usp=header', '_blank')}
                 className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-amber-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
               >
                 <div className="bg-gradient-to-r from-amber-400 to-yellow-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
@@ -528,7 +528,7 @@ const HomePage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">궁합 분석</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  두 사람의 생년월일시로 알아보는 특별한 인연. 
+                  두 사람의 생년월일시로 알아보는 특별한 인연.
                   사주 기반의 정확한 궁합 분석을 받아보세요.
                 </p>
                 <div className="flex items-center text-amber-600 font-medium">
@@ -541,7 +541,7 @@ const HomePage = () => {
             {/* 하단 1개 */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-start-2">
-                <div 
+                <div
                   onClick={navigateToCommunity}
                   className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-orange-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
                 >
@@ -550,7 +550,7 @@ const HomePage = () => {
                   </div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">감정 기록</h3>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                    소중한 순간들을 기록하고 보관하세요. 
+                    소중한 순간들을 기록하고 보관하세요.
                     나만의 연애 히스토리가 차곡차곡 쌓여갑니다.
                   </p>
                   <div className="flex items-center text-orange-600 font-medium">
@@ -585,14 +585,14 @@ const HomePage = () => {
                 rating: 5
               },
               {
-                name: "이준호", 
+                name: "이준호",
                 age: "29세",
                 content: "궁합 분석 결과가 놀라울 정도로 정확했어요. 지금 연인과 더 깊이 이해하게 됐습니다 ✨",
                 rating: 5
               },
               {
                 name: "박민지",
-                age: "24세", 
+                age: "24세",
                 content: "감정 기록 기능 덕분에 내 마음을 정리할 수 있게 됐어요. 소중한 순간들을 놓치지 않아서 좋아요 🌙",
                 rating: 5
               }
@@ -607,13 +607,13 @@ const HomePage = () => {
                     <div className="text-gray-500 text-sm">{review.age}</div>
                   </div>
                 </div>
-                
+
                 <div className="flex mb-4">
                   {[...Array(review.rating)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-amber-400 fill-current" />
                   ))}
                 </div>
-                
+
                 <p className="text-gray-600 leading-relaxed">
                   {review.content}
                 </p>
@@ -633,9 +633,9 @@ const HomePage = () => {
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               당신의 특별한 연애 여정이 여기서 시작됩니다
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
+              <button
                 onClick={navigateToAnalyze}
                 className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl"
               >
@@ -659,14 +659,14 @@ const HomePage = () => {
                 <span className="text-xl font-bold text-gray-800">궁합노트</span>
               </div>
               <p className="text-gray-600 mb-4 max-w-md">
-                내 마음을 이해하는 특별한 공간에서 
+                내 마음을 이해하는 특별한 공간에서
                 소중한 감정들을 기록하고 공유해보세요.
               </p>
               <div className="text-gray-400 text-sm">
                 © 2024 궁합노트. All rights reserved.
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-gray-800 font-semibold mb-4">서비스</h3>
               <ul className="space-y-2 text-gray-600">
@@ -676,7 +676,7 @@ const HomePage = () => {
                 <li><a href="#" className="hover:text-gray-800 transition-colors">연애 리포트</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-gray-800 font-semibold mb-4">고객지원</h3>
               <ul className="space-y-2 text-gray-600">

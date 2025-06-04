@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthProvider';
+import AuthProvider from './components/AuthProvider';
 import './App.css';
 
 // 컴포넌트들을 Lazy Loading으로 변경
