@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "궁합노트",
+  "name": "궁합노트 - 그사람과 더 가까워지는 공간",
   "icons": [
     {
       "src": "favicon.ico",
