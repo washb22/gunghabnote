@@ -3,9 +3,9 @@ import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, E
 import { useAuth } from '../components/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
-// 로그인/회원가입 모달 컴포넌트 (기존과 동일)
+// 로그인/회원가입 모달 컴포넌트
 const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
-  const { login, signup, findUser, checkEmailExists, googleLogin, kakaoLogin, naverLogin } = useAuth();
+  const { login, signup, googleLogin, kakaoLogin } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -68,10 +68,9 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
 
     try {
       if (mode === 'login') {
-        const user = findUser(formData.email, formData.password);
+        const result = await login(formData.email, formData.password);
         
-        if (user) {
-          login(user);
+        if (result.success) {
           setFormData({
             email: '',
             password: '',
@@ -81,20 +80,17 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
           });
           onClose();
         } else {
-          setErrors({ email: '이메일 또는 비밀번호가 올바르지 않습니다' });
+          setErrors({ general: result.error });
         }
       } else {
-        const existingUser = checkEmailExists(formData.email);
+        const result = await signup({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          birthDate: formData.birthDate
+        });
         
-        if (existingUser) {
-          setErrors({ email: '이미 존재하는 이메일입니다' });
-        } else {
-          signup({
-            email: formData.email,
-            password: formData.password,
-            name: formData.name,
-            birthDate: formData.birthDate
-          });
+        if (result.success) {
           setFormData({
             email: '',
             password: '',
@@ -103,6 +99,8 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
             confirmPassword: ''
           });
           onClose();
+        } else {
+          setErrors({ general: result.error });
         }
       }
     } catch (error) {
@@ -110,6 +108,21 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // 소셜 로그인 핸들러들 - 로그인 후 모달 자동 닫기
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
+      onClose();
+    } catch (error) {
+      console.error('구글 로그인 오류:', error);
+    }
+  };
+
+  const handleKakaoLogin = () => {
+    kakaoLogin();
+    // 카카오는 페이지 리다이렉트 방식이므로 모달 닫기 불필요
   };
 
   if (!isOpen) return null;
@@ -245,10 +258,7 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
           {/* 구글 로그인 버튼 */}
           <button
             type="button"
-            onClick={() => {
-              googleLogin();
-              onClose();
-            }}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl bg-white hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium mb-3"
           >
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -263,31 +273,13 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
           {/* 카카오 로그인 버튼 */}
           <button
             type="button"
-            onClick={() => {
-              kakaoLogin();
-              onClose();
-            }}
+            onClick={handleKakaoLogin}
             className="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-500 transition-all duration-200 text-gray-900 font-medium mb-3"
           >
             <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 0 1-1.727-.11l-4.408 2.883c-.501.265-.678.236-.472-.413l.892-3.678c-2.88-1.46-4.785-3.99-4.785-6.866C1.5 6.665 6.201 3 12 3z"/>
             </svg>
             카카오로 {mode === 'login' ? '로그인' : '회원가입'}
-          </button>
-
-          {/* 네이버 로그인 버튼 */}
-          <button
-            type="button"
-            onClick={() => {
-              naverLogin();
-              onClose();
-            }}
-            className="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-all duration-200 text-white font-medium"
-          >
-            <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z"/>
-            </svg>
-            네이버로 {mode === 'login' ? '로그인' : '회원가입'}
           </button>
         </div>
 
@@ -362,7 +354,6 @@ const HomePage = () => {
               <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">기능소개</a>
               <a href="#reviews" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">궁합보기</button>
-              <button onClick={navigateToCommunity} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">감정기록</button>
               
               {user ? (
                 <div className="flex items-center space-x-4">
@@ -401,7 +392,6 @@ const HomePage = () => {
               <a href="#features" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">기능소개</a>
               <a href="#reviews" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">후기</a>
               <button onClick={navigateToAnalyze} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">궁합보기</button>
-              <button onClick={navigateToCommunity} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">감정기록</button>
               
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
@@ -458,7 +448,7 @@ const HomePage = () => {
               혼자가 아닌 감정 여정을 함께 시작해보세요
             </p>
 
-            {/* CTA Buttons - 메인 액션 단일화 */}
+            {/* CTA Buttons */}
             <div className="flex flex-col items-center mb-12">
               <button 
                 onClick={navigateToAnalyze}
@@ -519,7 +509,7 @@ const HomePage = () => {
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">오늘의 속마음</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
                   하루 한 번, 그 사람의 진짜 마음을 엿볼 수 있어요. 
-                  AI가 분석해주는 오늘의 감정 상태를 확인해보세요.
+                  사주가 분석해주는 오늘의 감정 상태를 확인해보세요.
                 </p>
                 <div className="flex items-center text-rose-500 font-medium">
                   <span>매일 무료</span>
