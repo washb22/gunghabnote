@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
-import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '../components/AuthProvider'; // useAuth는 named export이므로 중괄호 사용
-import { useNavigate } from 'react-router-dom';
+import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, EyeOff, Check, Shield, Clock } from 'lucide-react';
+// import { useAuth } from '../components/AuthProvider';
+// import { useNavigate } from 'react-router-dom';
 
-// 로그인/회원가입 모달 컴포넌트 (이 부분은 변경하지 않습니다. 기존 코드와 동일합니다.)
+// Mock hooks for demonstration
+const useAuth = () => ({
+  user: null,
+  login: async () => ({ success: true }),
+  signup: async () => ({ success: true }),
+  googleLogin: async () => {},
+  kakaoLogin: () => {},
+  logout: () => {}
+});
+
+const useNavigate = () => (path) => console.log('Navigate to:', path);
+
+// 로그인/회원가입 모달 컴포넌트
 const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
   const { login, signup, googleLogin, kakaoLogin } = useAuth();
   const [formData, setFormData] = useState({
@@ -69,15 +81,8 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
     try {
       if (mode === 'login') {
         const result = await login(formData.email, formData.password);
-
         if (result.success) {
-          setFormData({
-            email: '',
-            password: '',
-            name: '',
-            birthDate: '',
-            confirmPassword: ''
-          });
+          setFormData({ email: '', password: '', name: '', birthDate: '', confirmPassword: '' });
           onClose();
         } else {
           setErrors({ general: result.error });
@@ -89,15 +94,8 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
           name: formData.name,
           birthDate: formData.birthDate
         });
-
         if (result.success) {
-          setFormData({
-            email: '',
-            password: '',
-            name: '',
-            birthDate: '',
-            confirmPassword: ''
-          });
+          setFormData({ email: '', password: '', name: '', birthDate: '', confirmPassword: '' });
           onClose();
         } else {
           setErrors({ general: result.error });
@@ -110,7 +108,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
     }
   };
 
-  // 소셜 로그인 핸들러들 - 로그인 후 모달 자동 닫기
   const handleGoogleLogin = async () => {
     try {
       await googleLogin();
@@ -122,7 +119,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
 
   const handleKakaoLogin = () => {
     kakaoLogin();
-    // 카카오는 페이지 리다이렉트 방식이므로 모달 닫기 불필요
   };
 
   if (!isOpen) return null;
@@ -248,14 +244,12 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
             {isLoading ? '처리중...' : mode === 'login' ? '로그인' : '회원가입'}
           </button>
 
-          {/* 구분선 */}
           <div className="flex items-center my-6">
             <div className="flex-1 border-t border-gray-300"></div>
             <span className="px-4 text-gray-500 text-sm">또는</span>
             <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          {/* 구글 로그인 버튼 */}
           <button
             type="button"
             onClick={handleGoogleLogin}
@@ -270,7 +264,6 @@ const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
             Google로 {mode === 'login' ? '로그인' : '회원가입'}
           </button>
 
-          {/* 카카오 로그인 버튼 */}
           <button
             type="button"
             onClick={handleKakaoLogin}
@@ -336,48 +329,82 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-yellow-50">
-      {/* Header */}
-      <header className="relative z-50">
+      {/* Enhanced Navigation Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-pink-100 shadow-sm">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-4">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <div className="relative">
-                <Heart className="w-8 h-8 text-rose-500" />
-                <Sparkles className="w-4 h-4 text-amber-400 absolute -top-1 -right-1" />
+                <Heart className="w-10 h-10 text-rose-500" />
+                <Sparkles className="w-5 h-5 text-amber-400 absolute -top-1 -right-1" />
               </div>
-              <span className="text-2xl font-bold text-gray-800">궁합노트</span>
+              <span className="text-3xl font-bold text-gray-800">궁합노트</span>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">기능소개</a>
-              <a href="#reviews" className="text-gray-600 hover:text-gray-800 transition-colors font-medium">후기</a>
-              <button onClick={navigateToAnalyze} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">궁합보기</button>
+            {/* Desktop Navigation - Enhanced */}
+            <div className="hidden lg:flex items-center space-x-8">
+              <button 
+                onClick={navigateToAnalyze}
+                className="group flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-rose-600 font-medium transition-all duration-200 hover:bg-rose-50 rounded-xl"
+              >
+                <Heart className="w-5 h-5" />
+                <span>궁합분석</span>
+              </button>
+
+              <button 
+                onClick={navigateToMindReader}
+                className="group flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-purple-600 font-medium transition-all duration-200 hover:bg-purple-50 rounded-xl"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span>오늘의속마음</span>
+                {!user && <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>}
+              </button>
+
+              <button 
+                onClick={navigateToCommunity}
+                className="group flex items-center space-x-2 px-4 py-2 text-gray-700 hover:text-amber-600 font-medium transition-all duration-200 hover:bg-amber-50 rounded-xl"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>감정기록</span>
+              </button>
 
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 font-medium">안녕하세요, {user.name}님!</span>
+                <div className="flex items-center space-x-4 pl-4 border-l border-gray-200">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{user.name}님</span>
+                  </div>
                   <button
                     onClick={logout}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-full transition-all font-medium"
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-xl transition-all font-medium"
                   >
                     로그아웃
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => openAuthModal('login')}
-                  className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full transition-all font-medium shadow-lg"
-                >
-                  로그인
-                </button>
+                <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
+                  <button
+                    onClick={() => openAuthModal('login')}
+                    className="text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                  >
+                    로그인
+                  </button>
+                  <button
+                    onClick={() => openAuthModal('signup')}
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-2 rounded-xl transition-all font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    회원가입
+                  </button>
+                </div>
               )}
             </div>
 
             {/* Mobile menu button */}
             <button
-              className="md:hidden text-gray-800"
+              className="lg:hidden text-gray-800"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -387,185 +414,218 @@ const HomePage = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-lg">
+          <div className="lg:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-lg">
             <div className="px-4 py-6 space-y-4">
-              <a href="#features" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">기능소개</a>
-              <a href="#reviews" className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium">후기</a>
-              <button onClick={navigateToAnalyze} className="block text-gray-600 hover:text-gray-800 transition-colors py-2 font-medium w-full text-left">궁합보기</button>
+              <button 
+                onClick={() => { navigateToAnalyze(); setIsMenuOpen(false); }}
+                className="flex items-center space-x-3 w-full p-3 text-gray-700 hover:bg-rose-50 rounded-xl transition-colors"
+              >
+                <Heart className="w-5 h-5 text-rose-500" />
+                <span className="font-medium">궁합분석</span>
+              </button>
+
+              <button 
+                onClick={() => { navigateToMindReader(); setIsMenuOpen(false); }}
+                className="flex items-center space-x-3 w-full p-3 text-gray-700 hover:bg-purple-50 rounded-xl transition-colors"
+              >
+                <Sparkles className="w-5 h-5 text-purple-500" />
+                <span className="font-medium">오늘의속마음</span>
+                {!user && <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>}
+              </button>
+
+              <button 
+                onClick={() => { navigateToCommunity(); setIsMenuOpen(false); }}
+                className="flex items-center space-x-3 w-full p-3 text-gray-700 hover:bg-amber-50 rounded-xl transition-colors"
+              >
+                <MessageCircle className="w-5 h-5 text-amber-500" />
+                <span className="font-medium">감정기록</span>
+              </button>
 
               {user ? (
                 <div className="pt-4 border-t border-gray-200">
-                  <p className="text-gray-700 font-medium mb-3">안녕하세요, {user.name}님!</p>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{user.name}님</span>
+                  </div>
                   <button
                     onClick={logout}
-                    className="w-full bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-full transition-all font-medium"
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl transition-all font-medium"
                   >
                     로그아웃
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => openAuthModal('login')}
-                  className="w-full bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-full transition-all font-medium shadow-lg"
-                >
-                  로그인
-                </button>
+                <div className="pt-4 border-t border-gray-200 space-y-3">
+                  <button
+                    onClick={() => openAuthModal('login')}
+                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl transition-all font-medium"
+                  >
+                    로그인
+                  </button>
+                  <button
+                    onClick={() => openAuthModal('signup')}
+                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white px-6 py-3 rounded-xl transition-all font-medium shadow-lg"
+                  >
+                    회원가입
+                  </button>
+                </div>
               )}
             </div>
           </div>
         )}
       </header>
 
-      {/* Hero Section */}
-      <section className="relative px-4 sm:px-6 lg:px-8 py-20">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Floating Elements */}
-          <div className="absolute top-10 left-10 opacity-20">
-            <div className="w-24 h-24 bg-gradient-to-br from-pink-200 to-rose-300 rounded-full animate-pulse"></div>
-          </div>
-          <div className="absolute top-20 right-20 opacity-30">
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-200 to-yellow-300 rounded-2xl animate-spin" style={{animationDuration: '8s'}}></div>
-          </div>
-          <div className="absolute bottom-10 left-20 opacity-15">
-            <div className="w-32 h-32 bg-gradient-to-br from-orange-100 to-pink-200 rounded-full animate-bounce" style={{animationDuration: '3s'}}></div>
-          </div>
-          <div className="absolute top-1/2 right-10 opacity-25">
-            <div className="w-20 h-20 bg-gradient-to-br from-rose-200 to-pink-300 rounded-full"></div>
-          </div>
+      {/* Main Banner Section - Fixed Mobile */}
+      <section className="w-full px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-md">
+          <img 
+            src="/images/main-banner.jpg"
+            alt="궁합노트 메인 배너" 
+            className="w-full h-auto"
+            style={{ 
+              display: 'block',
+              maxWidth: '100%',
+              height: 'auto'
+            }}
+          />
+        </div>
+      </section>
 
+      {/* Hero Section - Brand Introduction */}
+      <section className="relative px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div className="max-w-6xl mx-auto text-center">
           <div className="relative z-10">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-800 mb-6 leading-tight">
-              내 마음을 이해하는
+              사랑의 시작은 서로의 생각을 정확히
               <br />
               <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-                특별한 공간
+                파악하는 것 부터 시작합니다.
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              연애 감정을 기록하고, 공유하며, 소중히 보관하는 곳
-              <br />
-              혼자가 아닌 감정 여정을 함께 시작해보세요
+            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+              그 사람과의 궁합은 몇%인지 간단하게 확인하고 결정하세요.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col items-center mb-12">
+            {/* Main CTA */}
+            <div className="flex justify-center">
               <button
-                onClick={navigateToAnalyze}
-                className="group bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center space-x-2 mb-4"
+                onClick={() => openAuthModal('signup')}
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
               >
                 <Heart className="w-6 h-6" />
-                <span>무료 궁합 보러가기</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <span>지금 시작하기</span>
+                <ArrowRight className="w-5 h-5" />
               </button>
-
-              <p className="text-gray-500 text-sm">
-                {user ? '로그인된 상태에서 더 많은 기능을 이용하실 수 있어요' : '더 많은 기능은 로그인 후 이용하실 수 있어요'}
-              </p>
-            </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 text-center">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-rose-100 shadow-lg">
-                <div className="text-2xl font-bold text-gray-800">50,000+</div>
-                <div className="text-gray-600 text-sm">궁합 분석</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-rose-100 shadow-lg">
-                <div className="text-2xl font-bold text-gray-800">12,000+</div>
-                <div className="text-gray-600 text-sm">감정 기록</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-4 border border-rose-100 shadow-lg">
-                <div className="text-2xl font-bold text-gray-800">95%</div>
-                <div className="text-gray-600 text-sm">만족도</div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
+      {/* What We Do Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-              로그인 후 이용 가능한 기능
+              우리가 하는 일
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              회원가입하시면 더 특별한 연애 기능들을 이용하실 수 있어요
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              전통 사주학과 현대 기술을 결합하여 당신만의 특별한 연애 여정을 함께합니다
             </p>
           </div>
 
-          <div className="space-y-8">
-            {/* 상단 2개 가로 배치 */}
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* 속마음 예측 */}
-              <div
-                onClick={navigateToMindReader}
-                className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-rose-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
-              >
-                <div className="bg-gradient-to-r from-rose-400 to-pink-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <Sparkles className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">오늘의 속마음</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  하루 한 번, 그 사람의 진짜 마음을 엿볼 수 있어요.
-                  사주가 분석해주는 오늘의 감정 상태를 확인해보세요.
-                </p>
-                <div className="flex items-center text-rose-500 font-medium">
-                  <span>매일 무료</span>
-                  {!user && <span className="ml-2 text-xs bg-rose-100 text-rose-600 px-2 py-1 rounded-full">로그인 필요</span>}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-rose-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-r from-rose-400 to-pink-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Heart className="w-8 h-8 text-white" />
               </div>
-
-              {/* 궁합 분석 */}
-              <div
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdPSrx-M-MdwdBlQ3Q1fILrNjerlFTgt7E0CAFwppnaBzc6rw/viewform?usp=header', '_blank')}
-                className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-amber-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
-              >
-                <div className="bg-gradient-to-r from-amber-400 to-yellow-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">궁합 분석</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  두 사람의 생년월일시로 알아보는 특별한 인연.
-                  사주 기반의 정확한 궁합 분석을 받아보세요.
-                </p>
-                <div className="flex items-center text-amber-600 font-medium">
-                  <span>무제한 이용</span>
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">사주 기반 궁합 분석</h3>
+              <p className="text-gray-600 leading-relaxed">
+                두 사람의 생년월일시를 바탕으로 정확한 인연 분석을 제공합니다. 
+                전통 사주학의 깊이 있는 해석으로 특별한 관계를 발견해보세요.
+              </p>
             </div>
 
-            {/* 하단 1개 */}
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="md:col-start-2">
-                <div
-                  onClick={navigateToCommunity}
-                  className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-orange-100 hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer"
-                >
-                  <div className="bg-gradient-to-r from-orange-400 to-rose-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                    <MessageCircle className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">감정 기록</h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    소중한 순간들을 기록하고 보관하세요.
-                    나만의 연애 히스토리가 차곡차곡 쌓여갑니다.
-                  </p>
-                  <div className="flex items-center text-orange-600 font-medium">
-                    <span>영구 보관</span>
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
+            <div className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-purple-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-r from-purple-400 to-indigo-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">일일 감정 예측</h3>
+              <p className="text-gray-600 leading-relaxed">
+                매일 변화하는 그 사람의 마음 상태를 섬세하게 분석해드립니다. 
+                하루 한 번의 특별한 순간으로 더 깊은 이해를 경험하세요.
+              </p>
+            </div>
+
+            <div className="group bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-amber-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="bg-gradient-to-r from-amber-400 to-orange-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <MessageCircle className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">감정 기록 보관</h3>
+              <p className="text-gray-600 leading-relaxed">
+                소중한 연애 순간들을 안전하게 저장하고 관리할 수 있습니다. 
+                당신만의 연애 히스토리가 시간이 지날수록 더욱 값진 자산이 됩니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      {/* Why Choose Us Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+              왜 궁합노트인가요?
+            </h2>
+            <p className="text-xl text-gray-600">
+              다른 서비스와는 차별화된 특별함을 경험해보세요
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-green-100 shadow-lg">
+              <div className="bg-gradient-to-r from-green-400 to-emerald-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <Check className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">정확성</h3>
+              <p className="text-gray-600 leading-relaxed">
+                수천 년 전통의 사주학을 바탕으로 한 체계적인 분석 시스템으로 
+                신뢰할 수 있는 결과를 제공합니다.
+              </p>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-blue-100 shadow-lg">
+              <div className="bg-gradient-to-r from-blue-400 to-cyan-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">프라이버시</h3>
+              <p className="text-gray-600 leading-relaxed">
+                안전한 개인정보 보호와 익명 기능으로 
+                마음 편히 감정을 기록하고 공유할 수 있습니다.
+              </p>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-purple-100 shadow-lg">
+              <div className="bg-gradient-to-r from-purple-400 to-pink-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <Star className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">개인화</h3>
+              <p className="text-gray-600 leading-relaxed">
+                당신만을 위한 맞춤형 연애 가이드와 
+                개인별 특성을 반영한 섬세한 분석을 제공합니다.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Reviews Section */}
-      <section id="reviews" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
@@ -582,19 +642,22 @@ const HomePage = () => {
                 name: "김수진",
                 age: "26세",
                 content: "속마음 예측이 정말 신기해요! 매일 확인하는 게 루틴이 됐어요. 덕분에 마음의 여유를 찾았답니다 💕",
-                rating: 5
+                rating: 5,
+                feature: "속마음 예측"
               },
               {
-                name: "이준호",
+                name: "이준호", 
                 age: "29세",
                 content: "궁합 분석 결과가 놀라울 정도로 정확했어요. 지금 연인과 더 깊이 이해하게 됐습니다 ✨",
-                rating: 5
+                rating: 5,
+                feature: "궁합 분석"
               },
               {
                 name: "박민지",
-                age: "24세",
+                age: "24세", 
                 content: "감정 기록 기능 덕분에 내 마음을 정리할 수 있게 됐어요. 소중한 순간들을 놓치지 않아서 좋아요 🌙",
-                rating: 5
+                rating: 5,
+                feature: "감정 기록"
               }
             ].map((review, index) => (
               <div key={index} className="bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-rose-100 shadow-lg hover:shadow-xl transition-all">
@@ -606,6 +669,12 @@ const HomePage = () => {
                     <div className="text-gray-800 font-medium">{review.name}</div>
                     <div className="text-gray-500 text-sm">{review.age}</div>
                   </div>
+                </div>
+
+                <div className="mb-4">
+                  <span className="inline-block bg-rose-100 text-rose-600 px-3 py-1 rounded-full text-sm font-medium">
+                    {review.feature}
+                  </span>
                 </div>
 
                 <div className="flex mb-4">
@@ -623,7 +692,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Final CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-r from-rose-50 to-pink-50 backdrop-blur-lg rounded-3xl p-12 border border-rose-200 shadow-lg">
@@ -631,20 +700,31 @@ const HomePage = () => {
               지금 시작해보세요
             </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              당신의 특별한 연애 여정이 여기서 시작됩니다
+              당신의 특별한 연애 여정이 여기서 시작됩니다.
+              <br />
+              소중한 감정들을 안전하게 기록하고 관리해보세요.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={navigateToAnalyze}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl"
+                onClick={() => openAuthModal('signup')}
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center justify-center space-x-2"
               >
-                무료 궁합 보러가기
+                <Heart className="w-6 h-6" />
+                <span>무료 회원가입</span>
+                <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="bg-white border-2 border-rose-200 hover:border-rose-300 text-gray-700 hover:text-gray-800 font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl">
-                더 알아보기
+              <button 
+                onClick={navigateToAnalyze}
+                className="bg-white border-2 border-rose-200 hover:border-rose-300 text-gray-700 hover:text-gray-800 font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                먼저 체험해보기
               </button>
             </div>
+
+            <p className="text-gray-500 text-sm mt-6">
+              ✨ 회원가입 시 모든 기능을 무료로 체험하실 수 있습니다
+            </p>
           </div>
         </div>
       </section>
@@ -654,13 +734,13 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <Heart className="w-6 h-6 text-rose-500" />
-                <span className="text-xl font-bold text-gray-800">궁합노트</span>
+              <div className="flex items-center space-x-3 mb-4">
+                <Heart className="w-8 h-8 text-rose-500" />
+                <span className="text-2xl font-bold text-gray-800">궁합노트</span>
               </div>
-              <p className="text-gray-600 mb-4 max-w-md">
-                내 마음을 이해하는 특별한 공간에서
-                소중한 감정들을 기록하고 공유해보세요.
+              <p className="text-gray-600 mb-4 max-w-md leading-relaxed">
+                연애 감정을 기록하고, 공유하며, 소중히 보관하는 특별한 공간에서
+                당신만의 감정 여정을 시작해보세요.
               </p>
               <div className="text-gray-400 text-sm">
                 © 2024 궁합노트. All rights reserved.
@@ -669,7 +749,7 @@ const HomePage = () => {
 
             <div>
               <h3 className="text-gray-800 font-semibold mb-4">서비스</h3>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-3 text-gray-600">
                 <li><button onClick={navigateToAnalyze} className="hover:text-gray-800 transition-colors">궁합 분석</button></li>
                 <li><button onClick={navigateToMindReader} className="hover:text-gray-800 transition-colors">속마음 예측</button></li>
                 <li><button onClick={navigateToCommunity} className="hover:text-gray-800 transition-colors">감정 기록</button></li>
@@ -679,7 +759,7 @@ const HomePage = () => {
 
             <div>
               <h3 className="text-gray-800 font-semibold mb-4">고객지원</h3>
-              <ul className="space-y-2 text-gray-600">
+              <ul className="space-y-3 text-gray-600">
                 <li><a href="#" className="hover:text-gray-800 transition-colors">이용약관</a></li>
                 <li><a href="#" className="hover:text-gray-800 transition-colors">개인정보처리방침</a></li>
                 <li><a href="#" className="hover:text-gray-800 transition-colors">문의하기</a></li>
@@ -690,7 +770,7 @@ const HomePage = () => {
         </div>
       </footer>
 
-      {/* 인증 모달 */}
+      {/* Auth Modal */}
       <AuthModal
         isOpen={authModal.isOpen}
         onClose={closeAuthModal}

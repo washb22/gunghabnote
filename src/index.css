@@ -14,3 +14,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 배너 이미지 반응형 설정 */
+.banner-responsive {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+/* 화면 크기별 최적화 */
+@media (max-width: 640px) {
+  .banner-container {
+    min-height: 200px;
+    max-height: 300px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .banner-container {
+    min-height: 250px;
+    max-height: 400px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .banner-container {
+    min-height: 300px;
+    max-height: 500px;
+  }
+}
