@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
 import { Heart, Sparkles, ArrowRight, Star, MessageCircle, Menu, X, User, Eye, EyeOff, Check, Shield, Clock } from 'lucide-react';
-// import { useAuth } from '../components/AuthProvider';
-// import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/AuthProvider';
+import { useNavigate } from 'react-router-dom'; // <-- 이 줄만 활성화하고 앞의 공백을 제거합니다.
 
-// Mock hooks for demonstration
-const useAuth = () => ({
-  user: null,
-  login: async () => ({ success: true }),
-  signup: async () => ({ success: true }),
-  googleLogin: async () => {},
-  kakaoLogin: () => {},
-  logout: () => {}
-});
 
-const useNavigate = () => (path) => console.log('Navigate to:', path);
 
 // 로그인/회원가입 모달 컴포넌트
 const AuthModal = ({ isOpen, onClose, mode, onSwitchMode }) => {
@@ -477,37 +467,20 @@ const HomePage = () => {
         )}
       </header>
 
-      {/* Main Banner Section - Fixed Mobile */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-md">
-          <img 
-            src="/images/main-banner.jpg"
-            alt="궁합노트 메인 배너" 
-            className="w-full h-auto"
-            style={{ 
-              display: 'block',
-              maxWidth: '100%',
-              height: 'auto'
-            }}
-          />
-        </div>
-      </section>
-
       {/* Hero Section - Brand Introduction */}
       <section className="relative px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <div className="max-w-6xl mx-auto text-center">
           <div className="relative z-10">
             <h1 className="text-5xl md:text-7xl font-bold text-gray-800 mb-6 leading-tight">
-              사랑의 시작은 서로의 생각을 정확히
+              아름다운 사랑이
               <br />
               <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
-                파악하는 것 부터 시작합니다.
+                이루어 지는곳
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-              그 사람과의 궁합은 몇%인지 간단하게 확인하고 결정하세요.
-            </p>
+              그 사람과의 궁합은 몇%인지 확인하세요            </p>
 
             {/* Main CTA */}
             <div className="flex justify-center">
@@ -529,10 +502,10 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-              우리가 하는 일
+              궁합노트는 사랑을 이루어 드립니다.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              전통 사주학과 현대 기술을 결합하여 당신만의 특별한 연애 여정을 함께합니다
+              전통 사주학과 현대 기술을 결합하여 사랑을 이루어 드립니다.
             </p>
           </div>
 
@@ -544,7 +517,7 @@ const HomePage = () => {
               <h3 className="text-2xl font-bold text-gray-800 mb-4">사주 기반 궁합 분석</h3>
               <p className="text-gray-600 leading-relaxed">
                 두 사람의 생년월일시를 바탕으로 정확한 인연 분석을 제공합니다. 
-                전통 사주학의 깊이 있는 해석으로 특별한 관계를 발견해보세요.
+                사주를 통합 길잡이로 단순한 조언이 아닌 운명의 조언을 해드립니다.
               </p>
             </div>
 
@@ -566,7 +539,7 @@ const HomePage = () => {
               <h3 className="text-2xl font-bold text-gray-800 mb-4">감정 기록 보관</h3>
               <p className="text-gray-600 leading-relaxed">
                 소중한 연애 순간들을 안전하게 저장하고 관리할 수 있습니다. 
-                당신만의 연애 히스토리가 시간이 지날수록 더욱 값진 자산이 됩니다.
+                나와 비슷한 사람들과 연애의 기록을 나누어 보아요
               </p>
             </div>
           </div>
